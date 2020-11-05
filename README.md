@@ -6,11 +6,11 @@
 ## 事前準備
 ### AdobeSignJavaSdkのインストール  
 mavenのセントラルリポジトリにあるやつは古そうなので[GitHub](https://github.com/adobe-sign/AdobeSignJavaSdk)からcloneしてmaven installする  
-~~~
+```Shell
 # git clone https://github.com/adobe-sign/AdobeSignJavaSdk.git
 # cd AdobeSignJavaSdk
 # mvn clean install
-~~~  
+```  
 ビルド後、/{UserRoot}/.m2/repository/io/swagger/swagger-java-client/1.0.0/swagger-java-client-1.0.0.jar があればOK(なにこのアーティファクト名。。。)
 ## アカウント作成  
 [ここ](https://acrobat.adobe.com/jp/ja/sign/developer-form.html)からアカウント作成する。筆者所有の独自ドメインだと作成できなかったのでgmailのメアドで作成した
@@ -25,29 +25,29 @@ mavenのセントラルリポジトリにあるやつは古そうなので[GitHu
 
 ### 動作確認
 - リポジトリをクローンし、ビルドする
-~~~
+```Shell
 # git clone https://github.com/rohisama/sample-adobe-sign.git
 # cd sample-adobe-sign
 # mvn clean install -Dmaven.test.skip=true
-~~~
+```
 - targetディレクトリ配下にadobe-sign-0.0.1-SNAPSHOT.jarがあることを確認
 - 以下コマンドで実行する
-~~~
+```Shell
 # java -jar adobe-sign-0.0.1-SNAPSHOT.jar
-~~~
+```
 - 起動が確認出来たらPostmanなどのRestClientからAPIコールを行いAdobeSignの一連の捜査を行う。  
 筆者は[Talend API Tester](https://chrome.google.com/webstore/detail/talend-api-tester-free-ed/aejoelaoggembcahagimdiliamlcdmfm?hl=ja)を使用している
   - ドキュメント登録API(以下はcurlコマンドに置き換えたもの、トークンやURLは適宜変更すること)  
   動作確認目的の為、固定のパスに配置したPDFファイル(/work/src/main/resources/docment/sampledoc.pdf)が常に登録される。  
   パス上にpdfファイルが存在することを確認すること(実装は[ここ](src/main/java/rohisama/sample/adobe/adobesign/service/TranseientDocumentsApiService.java#L28-L29)なので適宜修正はOK)
-  ~~~
+  ```Shell
   curl -i -X POST \
      -H "Authorization:{取得したトークン}" \
      -H "Content-Type:application/json" \
      'https://localhost:8080/transientDocuments'
-  ~~~
+  ```
   - Agreement作成API
-  ~~~
+  ```Shell
   curl -i -X POST \
     -H "Authorization:{取得したトークン}" \
     -H "Content-Type:application/json" \
@@ -58,13 +58,13 @@ mavenのセントラルリポジトリにあるやつは古そうなので[GitHu
       "email" : "sample@example.com"
     }' \
     'https://localhost:8080/agreements'
-  ~~~
+  ```
   - この時点でsample@example.com宛に署名依頼のメールが届いているので、メールのリンクから署名を行う
   - ドキュメント取得API
-  ~~~
+  ```Shell
   curl -i -X GET \
      -H "Authorization:{取得したトークン}" \
      'https://localhost:8080/agreements/{Agreement作成APIのレスポンスで取得したagreementId}/documents'
-  ~~~  
+  ```  
   ドキュメント取得APIでは、署名済みの場合は署名後のドキュメントがダウンロードされる。  
   また動作確認目的として/work/result/test.pdfへも保存される。エラーになる場合はディレクトリが存在するかを確認すること
