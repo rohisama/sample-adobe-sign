@@ -3,6 +3,10 @@
 - Adobe Sign APIの動作確認用のサンプルコード
 - 動作確認目的のため常に固定のドキュメントが登録されるなど動作に制限があります
 - エラーハンドリング等もノーケアです
+## 環境
+- Java version: 1.8.0_272
+- Apache Maven 3.6.3  
+※maven:3-openjdk-8のdockerイメージを使用
 ## 事前準備
 ### AdobeSignJavaSdkのインストール  
 mavenのセントラルリポジトリにあるやつは古そうなので[GitHub](https://github.com/adobe-sign/AdobeSignJavaSdk)からcloneしてmaven installする  
