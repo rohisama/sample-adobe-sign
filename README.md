@@ -4,9 +4,15 @@
 - 動作確認目的のため常に固定のドキュメントが登録されるなど動作に制限があります
 - エラーハンドリング等もノーケアです
 ## 環境
-- Java version: 1.8.0_272
-- Apache Maven 3.6.3  
-※maven:3-openjdk-8のdockerイメージを使用
+- maven:3-openjdk-8のdockerイメージを使用。Java等のバージョン情報は以下
+  ```Shell
+  root@8612094b7822:/# mvn -version
+  Apache Maven 3.6.3 (cecedd343002696d0abb50b32b541b8a6ba2883f)
+  Maven home: /usr/share/maven
+  Java version: 1.8.0_272, vendor: Oracle Corporation, runtime: /usr/local/openjdk-8/jre
+  Default locale: en, platform encoding: UTF-8
+  OS name: "linux", version: "5.4.0-42-generic", arch: "amd64", family: "unix"
+  ```
 ## 事前準備
 ### AdobeSignJavaSdkのインストール  
 mavenのセントラルリポジトリにあるやつは古そうなので[GitHub](https://github.com/adobe-sign/AdobeSignJavaSdk)からcloneしてmaven installする  
