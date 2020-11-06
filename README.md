@@ -1,6 +1,7 @@
 # Adobe Sign API動作確認用サンプルアプリ
 ## 注意書き
 - Adobe Sign APIの動作確認用のサンプルコード
+- APIコールにAdobeSignJavaSdkを利用しているので大した実装していません
 - 動作確認目的のため常に固定のドキュメントが登録されるなど動作に制限があります
 - エラーハンドリング等もノーケアです
 ## 環境
@@ -45,16 +46,17 @@ mavenのセントラルリポジトリにあるやつは古そうなので[GitHu
 ```Shell
 # java -jar adobe-sign-0.0.1-SNAPSHOT.jar
 ```
-- 起動が確認出来たらPostmanなどのRestClientからAPIコールを行いAdobeSignの一連の捜査を行う。  
-筆者は[Talend API Tester](https://chrome.google.com/webstore/detail/talend-api-tester-free-ed/aejoelaoggembcahagimdiliamlcdmfm?hl=ja)を使用している
+- 起動が確認出来たらPostmanなどのRestClientからAPIコールを行いAdobeSignの一連の操作を行う。  
+筆者は[Talend API Tester](https://chrome.google.com/webstore/detail/talend-api-tester-free-ed/aejoelaoggembcahagimdiliamlcdmfm?hl=ja)を使用している  
+※2020/11/6現在はアプリケーションをデプロイしている為、以下curlコマンドのURLで実行可能
   - ドキュメント登録API(以下はcurlコマンドに置き換えたもの、トークンやURLは適宜変更すること)  
-  動作確認目的の為、固定のパスに配置したPDFファイル(/work/src/main/resources/docment/sampledoc.pdf)が常に登録される。  
+  ※動作確認目的の為、固定のパスに配置したPDFファイル(/work/src/main/resources/docment/sampledoc.pdf)が常に登録される。  
   パス上にpdfファイルが存在することを確認すること(実装は[ここ](src/main/java/rohisama/sample/adobe/adobesign/service/TranseientDocumentsApiService.java#L28-L29)なので適宜修正はOK)
   ```Shell
   curl -i -X POST \
      -H "Authorization:{取得したトークン}" \
      -H "Content-Type:application/json" \
-     'https://localhost:8080/transientDocuments'
+     'https://rohisama.ma-hiro.com/authapp/transientDocuments'
   ```
   - Agreement作成API
   ```Shell
@@ -67,14 +69,15 @@ mavenのセントラルリポジトリにあるやつは古そうなので[GitHu
       "documentId" : "{ドキュメント登録APIのレスポンスで取得したdocumentId}",
       "email" : "sample@example.com"
     }' \
-    'https://localhost:8080/agreements'
+    'https://rohisama.ma-hiro.com/authapp/agreements'
   ```
-  - この時点でsample@example.com宛に署名依頼のメールが届いているので、メールのリンクから署名を行う
+  - この時点でsample@example.com宛に署名依頼のメールが届いているので、メールのリンクから署名を行う  
+  ※メールアドレスはAdobeSignに登録しているアカウントとは別のアドレスを指定している
   - ドキュメント取得API
   ```Shell
   curl -i -X GET \
      -H "Authorization:{取得したトークン}" \
-     'https://localhost:8080/agreements/{Agreement作成APIのレスポンスで取得したagreementId}/documents'
+     'https://rohisama.ma-hiro.com/authapp/agreements/{Agreement作成APIのレスポンスで取得したagreementId}/documents'
   ```  
   ドキュメント取得APIでは、署名済みの場合は署名後のドキュメントがダウンロードされる。  
   また動作確認目的として/work/result/test.pdfへも保存される。エラーになる場合はディレクトリが存在するかを確認すること
